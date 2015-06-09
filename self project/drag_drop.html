@@ -1,0 +1,182 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Drag and Drop</title>
+<script src="http://www.nihilogic.dk/labs/canvas2image/canvas2image.js"></script>
+<script>
+ function toImage() {
+	  var ua = window.navigator.userAgent;
+	  if (ua.indexOf("Firefox") > 0) {
+  var dataURL = document.getElementById('canvas').toDataURL("image/png");
+  
+      dataURL = dataURL.replace("image/png", "image/octet-stream");
+      document.location.href = dataURL;
+	  }
+	   else {
+                    alert("Please use Firefox");
+                }
+}
+</script>
+
+
+</head>
+<body>
+<section>
+
+<div>
+<canvas id="canvas" width="1024" height="768" style="z-index:1;">
+</canvas>
+
+<img src="./source/img/SAVE.png" style="z-index:2; position:absolute; top:610px; left:50px" onclick=" toImage('window')"/>
+ <image id="theimage"></image>
+</div>
+
+<script type="text/javascript">
+
+var canvas;
+var ctx;
+var x= new Array();
+var y= new Array();
+var j= new Array();
+var k= new Array();
+var l= new Array();
+var m= new Array();
+var isEye= new Array();
+var isNose= new Array();
+var isMouth= new Array();
+for(i=0; i<100; i++){
+	 x[i]=143;
+	 y[i]=330;
+	 j[i]=143;
+	 k[i]=450;
+	 l[i]=143;
+	 m[i]=580;
+	 isEye[i]=false;
+	isNose[i]=false;
+ 	isMouth[i]=false;
+}
+
+var WIDTH = 1024;
+var HEIGHT = 768;
+var bg=new Image();
+bg.src="./source/img/drag and pull.png";
+var eye=new Image();
+eye.src="./source/img/eye.png";
+var nose=new Image();
+nose.src="./source/img/nose.png";
+var mouth=new Image();
+mouth.src="./source/img/mouth.png";
+var icon=new Image();
+icon.src="./source/img/SAVE.png";
+
+
+
+function rect(x,y,w,h) {
+ ctx.beginPath();
+ ctx.rect(x,y,w,h);
+ ctx.closePath();
+ ctx.fill();
+}
+
+function clear() {
+ ctx.clearRect(0, 0, WIDTH, HEIGHT);
+}
+
+function init() {
+ canvas = document.getElementById("canvas");
+ ctx = canvas.getContext("2d");
+ return setInterval(draw, 10);
+}
+
+function draw() {
+ clear();
+ ctx.drawImage(bg,0,0);
+ for(var i=0;i<100;i++)
+ {
+ ctx.drawImage(eye, x[i]-37.5, y[i]-45);
+ ctx.drawImage(nose, j[i]-70, k[i]-40);
+ ctx.drawImage(mouth, l[i]-70, m[i]-40);
+ }
+ //ctx.drawImage(icon, 45, 610);
+ //ctx.drawImage(eye, 105.5, 285);
+ //ctx.drawImage(nose, 73, 410);
+}
+
+function myMove(e){
+	for(i=0;i<100;i++){
+ if (dragok){
+	 if(isEye[i]){	 
+  	x[i] = e.pageX - canvas.offsetLeft;
+  	y[i] = e.pageY - canvas.offsetTop;
+ 	}
+	else if(isNose[i]){
+	j[i] = e.pageX - canvas.offsetLeft;
+  	k [i]= e.pageY - canvas.offsetTop;
+	}
+	else if(isMouth[i]){
+	l[i] = e.pageX - canvas.offsetLeft;
+  	m[i]= e.pageY - canvas.offsetTop;
+	}
+ }
+	}
+}
+
+function myDown(e){
+	for(i=0;i<100;i++){
+ if (e.pageX < x[i] + 37.5 + canvas.offsetLeft && e.pageX > x[i] - 37.5 +
+ canvas.offsetLeft && e.pageY < y[i] + 45 + canvas.offsetTop &&
+ e.pageY > y[i] -45 + canvas.offsetTop){
+  x[i] = e.pageX - canvas.offsetLeft;
+  y[i] = e.pageY - canvas.offsetTop;
+  dragok = true;
+  isEye[i]=true;
+  canvas.onmousemove = myMove;
+  break;
+ }
+ else if (e.pageX < j[i] + 70 + canvas.offsetLeft && e.pageX > j[i] - 70 +
+ canvas.offsetLeft && e.pageY < k[i] + 40 + canvas.offsetTop &&
+ e.pageY > k[i] -40 + canvas.offsetTop) {
+  j[i] = e.pageX - canvas.offsetLeft;
+  k[i] = e.pageY - canvas.offsetTop;
+  dragok = true;
+  isNose[i]=true;
+  canvas.onmousemove = myMove;
+  break;
+ }
+ else if (e.pageX < l[i] + 70 + canvas.offsetLeft && e.pageX > l[i]-70 +
+ canvas.offsetLeft && e.pageY < m[i] + 40 + canvas.offsetTop &&
+ e.pageY > m[i]-40 + canvas.offsetTop) {
+  l[i] = e.pageX - canvas.offsetLeft;
+  m[i] = e.pageY - canvas.offsetTop;
+  dragok = true;
+  isMouth[i]=true;
+  canvas.onmousemove = myMove;
+  break;
+ }
+	}
+}
+
+function myUp(){
+ dragok = false;
+ canvas.onmousemove = null;
+ for(i=0;i<100;i++){
+ isEye[i]=false;
+ isNose[i]=false;
+ isMouth[i]=false;
+ }
+}
+
+init();
+canvas.onmousedown = myDown;
+canvas.onmouseup = myUp;
+
+
+
+</script>
+
+
+</section>
+</body>
+</html>
+﻿
